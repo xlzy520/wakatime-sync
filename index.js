@@ -74,9 +74,9 @@ async function updateGist(date, content) {
  */
 async function sendMessageToWechat(text, desp) {
   if (typeof SCU_KEY !== 'undefined') {
-    return Axios.get(`${scuPushApi}/${SCU_KEY}.send`, {
+    return Axios.get(`https://express.xlzy520.cn/push`, {
       params: {
-        text,
+        text: text + "-----分割线-----"+ desp,
         desp
       }
     }).then(response => response.data)
