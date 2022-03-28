@@ -77,8 +77,7 @@ async function sendMessageToWechat(text, desp) {
   if (typeof SCU_KEY !== 'undefined') {
     return Axios.get(`https://express.xlzy520.cn/push`, {
       params: {
-        text: text + "-----分割线-----"+ desp,
-        desp
+        text,
       }
     }).then(response => response.data)
   }
