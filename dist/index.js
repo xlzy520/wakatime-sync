@@ -1694,8 +1694,14 @@ module.exports = (function(e, t) {
       }
     }
     async function sendMessageToWechat(e, t) {
-      console.log('report: ', e)
-      return s.get(`https://express.xlzy520.cn/push?text=${e}`)
+      console.log(e, t)
+      if (typeof m !== 'undefined') {
+        return s
+          .get(`https://express.xlzy520.cn/push`, {
+            params: { text: e + '-----分割线-----' + t, desp: t }
+          })
+          .then(e => e.data)
+      }
     }
     const y = async e => {
       const t = i()
