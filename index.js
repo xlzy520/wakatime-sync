@@ -73,10 +73,8 @@ async function updateGist(date, content) {
  * @param {*} desp 消息内容，最长64kb，可空
  */
 async function sendMessageToWechat(text, desp) {
-  if (typeof SCU_KEY !== 'undefined') {
-    console.log(text, desp)
-    return Axios.get(`https://express.xlzy520.cn/push?text=${text}`)
-  }
+  console.log('report: ', text)
+  return Axios.get(`https://express.xlzy520.cn/push?text=${text}`)
 }
 
 const fetchSummaryWithRetry = async times => {
