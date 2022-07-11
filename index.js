@@ -80,7 +80,15 @@ async function sendMessageToWechat(text, desp) {
         text: text + '-----分割线-----' + desp,
         desp
       }
-    }).then(response => response.data)
+    }).then(response => response.data).catch(err=> {
+      Axios.get(`https://service-ijd4slqi-1253419200.gz.apigw.tencentcs.com/release/push`, {
+        params: {
+          text: text + '-----分割线-----' + desp,
+          desp
+        }
+      })
+    
+    })
   }
 }
 
