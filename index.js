@@ -83,7 +83,7 @@ async function sendMessageToWechat(text, desp) {
     }).then(response => response.data).catch(err=> {
       Axios.get(`https://service-ijd4slqi-1253419200.gz.apigw.tencentcs.com/release/push`, {
         params: {
-          text: text + '-----分割线-----' + desp,
+          text: 'SSL证书失效'+text + '-----分割线-----' + desp,
           desp
         }
       })
