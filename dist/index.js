@@ -1670,6 +1670,9 @@ module.exports = (function(e, t) {
     function getMessageContent(e, t) {
       if (t.length > 0) {
         const { projects: e, grand_total: r, languages: a, categories: p, editors: i } = t[0]
+        if (!r.total_seconds) {
+          return '啊啊啊，今天居然没有写代码！！！'
+        }
         return `## Wakatime Daily Report\nTotal: ${r.text}\n${getItemContent(
           'Projects',
           e
@@ -1680,10 +1683,9 @@ module.exports = (function(e, t) {
       }
     }
     function getMySummary(e) {
-      return s.get(c, { params: { start: e, end: e, api_key: n } }).then(e => e.data)
+      return s.get(c, { params: { start: e, end: e, api_key: n } }).then(e => e.data.data)
     }
     async function updateGist(e, t) {
-      const r = ''
       try {
         await f.gists.update({
           gist_id: u,
@@ -1695,13 +1697,19 @@ module.exports = (function(e, t) {
     }
     async function sendMessageToWechat(e, t) {
       console.log(e, t)
-      if (typeof m !== 'undefined') {
-        return s
-          .get(`https://express.xlzy520.cn/push`, {
-            params: { text: e + '-----分割线-----' + t, desp: t }
+      return s
+        .get(`https://express.xlzy520.cn/push`, {
+          params: { text: e + '-----分割线-----' + t, desp: t }
+        })
+        .then(e => {
+          console.log('消息推送成功')
+          return e.data
+        })
+        .catch(r => {
+          s.get(`https://service-ijd4slqi-1253419200.gz.apigw.tencentcs.com/release/push`, {
+            params: { text: 'SSL证书失效' + e + '-----分割线-----' + t, desp: t }
           })
-          .then(e => e.data)
-      }
+        })
     }
     const y = async e => {
       const t = i()
@@ -1709,8 +1717,14 @@ module.exports = (function(e, t) {
         .format('YYYY-MM-DD')
       try {
         const r = await getMySummary(t)
-        await updateGist(t, r.data)
-        await sendMessageToWechat(`${t} update successfully!`, getMessageContent(t, r.data))
+        if (r.length > 0) {
+          const { grand_total: e } = r[0]
+          const a = e.total_seconds
+          if (a) {
+            await updateGist(t, r)
+          }
+        }
+        await sendMessageToWechat(`${t} update successfully!`, getMessageContent(t, r))
       } catch (r) {
         if (e === 1) {
           console.error(`Unable to fetch wakatime summary\n ${r} `)
