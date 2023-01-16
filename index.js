@@ -25,6 +25,9 @@ function getItemContent(title, content) {
 function getMessageContent(date, summary) {
   if (summary.length > 0) {
     const { projects, grand_total, languages, categories, editors } = summary[0]
+    if (!grand_total.total_seconds) {
+      return '啊啊啊，今天居然没有写代码！！！'
+    }
 
     return `## Wakatime Daily Report\nTotal: ${grand_total.text}\n${getItemContent(
       'Projects',
@@ -52,7 +55,6 @@ function getMySummary(date) {
  * @param {*} content update content
  */
 async function updateGist(date, content) {
-  const file = ''
   try {
     await octokit.gists.update({
       gist_id: GIST_ID,
@@ -74,22 +76,24 @@ async function updateGist(date, content) {
  */
 async function sendMessageToWechat(text, desp) {
   console.log(text, desp)
-  if (typeof SCU_KEY !== 'undefined') {
-    return Axios.get(`https://express.xlzy520.cn/push`, {
-      params: {
-        text: text + '-----分割线-----' + desp,
-        desp
-      }
-    }).then(response => response.data).catch(err=> {
+  return Axios.get(`https://express.xlzy520.cn/push`, {
+    params: {
+      text: text + '-----分割线-----' + desp,
+      desp
+    }
+  })
+    .then(response => {
+      console.log('消息推送成功')
+      return response.data
+    })
+    .catch(err => {
       Axios.get(`https://service-ijd4slqi-1253419200.gz.apigw.tencentcs.com/release/push`, {
         params: {
-          text: 'SSL证书失效'+text + '-----分割线-----' + desp,
+          text: 'SSL证书失效' + text + '-----分割线-----' + desp,
           desp
         }
       })
-    
     })
-  }
 }
 
 const fetchSummaryWithRetry = async times => {
@@ -98,7 +102,10 @@ const fetchSummaryWithRetry = async times => {
     .format('YYYY-MM-DD')
   try {
     const mySummary = await getMySummary(yesterday)
-    await updateGist(yesterday, mySummary.data)
+    const total_seconds = mySummary.data?.[0]?.grand_total?.total_seconds
+    if (total_seconds) {
+      await updateGist(yesterday, mySummary.data)
+    }
     await sendMessageToWechat(
       `${yesterday} update successfully!`,
       getMessageContent(yesterday, mySummary.data)
