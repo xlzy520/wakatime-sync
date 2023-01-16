@@ -46,7 +46,7 @@ function getMySummary(date) {
       end: date,
       api_key: WAKATIME_API_KEY
     }
-  }).then(response => response.data)
+  }).then(response => response.data.data)
 }
 
 /**
@@ -102,13 +102,16 @@ const fetchSummaryWithRetry = async times => {
     .format('YYYY-MM-DD')
   try {
     const mySummary = await getMySummary(yesterday)
-    const total_seconds = mySummary.data?.[0]?.grand_total?.total_seconds
-    if (total_seconds) {
-      await updateGist(yesterday, mySummary.data)
+    if (mySummary.length > 0) {
+      const { grand_total } = mySummary[0]
+      const total_seconds = grand_total.total_seconds
+      if (total_seconds) {
+        await updateGist(yesterday, mySummary)
+      }
     }
     await sendMessageToWechat(
       `${yesterday} update successfully!`,
-      getMessageContent(yesterday, mySummary.data)
+      getMessageContent(yesterday, mySummary)
     )
   } catch (error) {
     if (times === 1) {
