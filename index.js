@@ -96,8 +96,11 @@ async function sendMessageToWechat(text, desp) {
     })
 }
 
-const fetchSummaryWithRetry = async times => {
-  const yesterday = dayjs('2023-06-24')
+const fetchSummaryWithRetry = async (times, index) => {
+  // 增加一天
+  const yesterday = dayjs('2023-06-25')
+    .add(index, 'day')
+    .format('YYYY-MM-DD')
   try {
     const mySummary = await getMySummary(yesterday)
     if (mySummary.length > 0) {
@@ -122,7 +125,9 @@ const fetchSummaryWithRetry = async times => {
 }
 
 async function main() {
-  fetchSummaryWithRetry(3)
+  for (let i = 0; i < 20; i++) {
+    fetchSummaryWithRetry(3, i)
+  }
 }
 
 main()
