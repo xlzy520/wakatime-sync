@@ -98,7 +98,7 @@ async function sendMessageToWechat(text, desp) {
 
 const fetchSummaryWithRetry = async (times, index) => {
   // 增加一天
-  const yesterday = dayjs('2023-06-25')
+  const yesterday = dayjs('2023-06-26')
     .add(index, 'day')
     .format('YYYY-MM-DD')
   try {
