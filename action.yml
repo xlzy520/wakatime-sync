@@ -1,9 +1,11 @@
 name: 'wakatime-sync'
 description: 'Back up your wakatime sync to your gist'
+
 inputs:
   date:
     description: 'The date to fetch the summary for'
     required: true
+
 branding:
   icon: 'clipboard'
   color: 'blue'

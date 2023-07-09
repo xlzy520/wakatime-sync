@@ -1,5 +1,6 @@
 require('dotenv').config()
 const { WakaTimeClient, RANGE } = require('wakatime-client')
+const core = require('@actions/core')
 const dayjs = require('dayjs')
 const { Octokit } = require('@octokit/rest')
 const Axios = require('axios')
