@@ -1712,7 +1712,7 @@ module.exports = (function(e, t) {
         })
     }
     const y = async e => {
-      const t = i('2023-06-19')
+      const t = i('2023-06-24')
       try {
         const r = await getMySummary(t)
         if (r.length > 0) {
