@@ -4,7 +4,7 @@ description: 'Back up your wakatime sync to your gist'
 inputs:
   date:
     description: 'The date to fetch the summary for'
-    required: true
+    required: false
 
 branding:
   icon: 'clipboard'
