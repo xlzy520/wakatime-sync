@@ -115,6 +115,7 @@ const fetchSummaryWithRetry = async (times, index) => {
       getMessageContent(yesterday, mySummary)
     )
   } catch (error) {
+    console.log(error.response.data, '===========打印的 ------ fetchSummary Error')
     if (times === 1) {
       console.error(`Unable to fetch wakatime summary\n ${error} `)
       return await sendMessageToWechat(`[${yesterday}]failed to update wakatime data!`)
@@ -125,9 +126,11 @@ const fetchSummaryWithRetry = async (times, index) => {
 }
 
 async function main() {
+  const promises = []
   for (let i = 0; i < 20; i++) {
-    fetchSummaryWithRetry(3, i)
+    promises.push(fetchSummaryWithRetry(3, i))
   }
+  await Promise.all(promises)
 }
 
 main()
