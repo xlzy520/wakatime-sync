@@ -6,7 +6,7 @@ on:
     inputs:
       date:
         description: 'The date of the summary you want to update, in the format YYYY-MM-DD'
-        required: true
+        required: false
 jobs:
   update-gist:
     runs-on: ubuntu-latest
