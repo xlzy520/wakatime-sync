@@ -1712,9 +1712,7 @@ module.exports = (function(e, t) {
         })
     }
     const y = async e => {
-      const t = i()
-        .subtract(1, 'day')
-        .format('YYYY-MM-DD')
+      const t = i('2023-06-19')
       try {
         const r = await getMySummary(t)
         if (r.length > 0) {
@@ -13880,10 +13878,10 @@ module.exports = (function(e, t) {
     s[W] = '^\\s*(' + s[N] + ')' + '\\s+-\\s+' + '(' + s[N] + ')' + '\\s*$'
     var K = n++
     s[K] = '(<|>)?=?\\s*\\*'
-    for (var Y = 0; Y < n; Y++) {
-      r(Y, s[Y])
-      if (!d[Y]) {
-        d[Y] = new RegExp(s[Y])
+    for (var X = 0; X < n; X++) {
+      r(X, s[X])
+      if (!d[X]) {
+        d[X] = new RegExp(s[X])
       }
     }
     t.parse = parse
@@ -14146,10 +14144,10 @@ module.exports = (function(e, t) {
       }
     }
     t.compareIdentifiers = compareIdentifiers
-    var X = /^[0-9]+$/
+    var J = /^[0-9]+$/
     function compareIdentifiers(e, t) {
-      var r = X.test(e)
-      var a = X.test(t)
+      var r = J.test(e)
+      var a = J.test(t)
       if (r && a) {
         e = +e
         t = +t
@@ -14268,14 +14266,14 @@ module.exports = (function(e, t) {
       this.options = t
       this.loose = !!t.loose
       this.parse(e)
-      if (this.semver === J) {
+      if (this.semver === Y) {
         this.value = ''
       } else {
         this.value = this.operator + this.semver.version
       }
       r('comp', this)
     }
-    var J = {}
+    var Y = {}
     Comparator.prototype.parse = function(e) {
       var t = this.options.loose ? d[F] : d[M]
       var r = e.match(t)
@@ -14287,7 +14285,7 @@ module.exports = (function(e, t) {
         this.operator = ''
       }
       if (!r[2]) {
-        this.semver = J
+        this.semver = Y
       } else {
         this.semver = new SemVer(r[2], this.options.loose)
       }
@@ -14297,7 +14295,7 @@ module.exports = (function(e, t) {
     }
     Comparator.prototype.test = function(e) {
       r('Comparator.test', e, this.options.loose)
-      if (this.semver === J) {
+      if (this.semver === Y) {
         return true
       }
       if (typeof e === 'string') {
@@ -14649,7 +14647,7 @@ module.exports = (function(e, t) {
       if (t.prerelease.length && !a.includePrerelease) {
         for (p = 0; p < e.length; p++) {
           r(e[p].semver)
-          if (e[p].semver === J) {
+          if (e[p].semver === Y) {
             continue
           }
           if (e[p].semver.prerelease.length > 0) {
@@ -14800,7 +14798,7 @@ module.exports = (function(e, t) {
         var m = null
         var l = null
         u.forEach(function(e) {
-          if (e.semver === J) {
+          if (e.semver === Y) {
             e = new Comparator('>=0.0.0')
           }
           m = m || e
