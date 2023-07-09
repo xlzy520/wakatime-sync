@@ -1654,12 +1654,13 @@ module.exports = (function(e, t) {
     const i = r(322)
     const { Octokit: d } = r(359)
     const s = r(704)
-    const { WAKATIME_API_KEY: n, GH_TOKEN: o, GIST_ID: u, SCU_KEY: m } = process.env
-    const l = 'https://wakatime.com/api/v1'
-    const c = `${l}/users/current/summaries`
-    const g = `https://sc.ftqq.com`
-    const h = new a(n)
-    const f = new d({ auth: `token ${o}` })
+    const n = core.getInput('date')
+    const { WAKATIME_API_KEY: o, GH_TOKEN: u, GIST_ID: m, SCU_KEY: l } = process.env
+    const c = 'https://wakatime.com/api/v1'
+    const g = `${c}/users/current/summaries`
+    const h = `https://sc.ftqq.com`
+    const f = new a(o)
+    const y = new d({ auth: `token ${u}` })
     function getItemContent(e, t) {
       let r = `#### ${e} \n`
       t.forEach(e => {
@@ -1683,12 +1684,12 @@ module.exports = (function(e, t) {
       }
     }
     function getMySummary(e) {
-      return s.get(c, { params: { start: e, end: e, api_key: n } }).then(e => e.data.data)
+      return s.get(g, { params: { start: e, end: e, api_key: o } }).then(e => e.data.data)
     }
     async function updateGist(e, t) {
       try {
-        await f.gists.update({
-          gist_id: u,
+        await y.gists.update({
+          gist_id: m,
           files: { [`summaries_${e}.json`]: { content: JSON.stringify(t) } }
         })
       } catch (e) {
@@ -1711,33 +1712,34 @@ module.exports = (function(e, t) {
           })
         })
     }
-    const y = async (e, t) => {
-      const r = i('2023-06-26')
-        .add(t, 'day')
-        .format('YYYY-MM-DD')
+    const v = async e => {
+      const t =
+        n ||
+        i()
+          .subtract(1, 'day')
+          .format('YYYY-MM-DD')
       try {
-        const t = await getMySummary(r)
-        if (t.length > 0) {
-          const { grand_total: e } = t[0]
+        const r = await getMySummary(t)
+        if (r.length > 0) {
+          const { grand_total: e } = r[0]
           const a = e.total_seconds
           if (a) {
-            await updateGist(r, t)
+            await updateGist(t, r)
           }
         }
-        await sendMessageToWechat(`${r} update successfully!`, getMessageContent(r, t))
-      } catch (t) {
+        await sendMessageToWechat(`${t} update successfully!`, getMessageContent(t, r))
+      } catch (r) {
+        console.log(r.response.data, '===========打印的 ------ fetchSummary Error')
         if (e === 1) {
-          console.error(`Unable to fetch wakatime summary\n ${t} `)
-          return await sendMessageToWechat(`[${r}]failed to update wakatime data!`)
+          console.error(`Unable to fetch wakatime summary\n ${r} `)
+          return await sendMessageToWechat(`[${t}]failed to update wakatime data!`)
         }
         console.log(`retry fetch summary data: ${e - 1} time`)
-        y(e - 1)
+        v(e - 1)
       }
     }
     async function main() {
-      for (let e = 0; e < 20; e++) {
-        y(3, e)
-      }
+      v(3)
     }
     main()
   },

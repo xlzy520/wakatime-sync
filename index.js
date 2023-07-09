@@ -4,6 +4,8 @@ const dayjs = require('dayjs')
 const { Octokit } = require('@octokit/rest')
 const Axios = require('axios')
 
+const date = core.getInput('date')
+
 const { WAKATIME_API_KEY, GH_TOKEN, GIST_ID, SCU_KEY } = process.env
 const BASE_URL = 'https://wakatime.com/api/v1'
 const summariesApi = `${BASE_URL}/users/current/summaries`
@@ -96,11 +98,13 @@ async function sendMessageToWechat(text, desp) {
     })
 }
 
-const fetchSummaryWithRetry = async (times, index) => {
+const fetchSummaryWithRetry = async times => {
   // 增加一天
-  const yesterday = dayjs('2023-06-26')
-    .add(index, 'day')
-    .format('YYYY-MM-DD')
+  const yesterday =
+    date ||
+    dayjs()
+      .subtract(1, 'day')
+      .format('YYYY-MM-DD')
   try {
     const mySummary = await getMySummary(yesterday)
     if (mySummary.length > 0) {
@@ -126,11 +130,7 @@ const fetchSummaryWithRetry = async (times, index) => {
 }
 
 async function main() {
-  const promises = []
-  for (let i = 0; i < 20; i++) {
-    promises.push(fetchSummaryWithRetry(3, i))
-  }
-  await Promise.all(promises)
+  fetchSummaryWithRetry(3)
 }
 
 main()
